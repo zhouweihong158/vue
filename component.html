@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script  src="node_modules/vue/dist/vue.js"></script>
+    <style>
+        .button{
+               display: inline-block;
+            border:1px solid #ccc;
+            box-shadow: 0 0 5px #ccc;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .red{
+            background: red;
+        }
+    </style>
+</head>
+<body>
+<div class="root">
+    <custom-button name="按钮"></custom-button>
+    <custom-button name="上传"></custom-button>
+    <custom-button name="取消"></custom-button>
+    <custom-button name="下载"></custom-button>
+</div>
+<script>
+    Vue.component("custom-button", {
+        props:["name"],
+        template: '<div class="button"  @click="add()"  :class="{red:red}">{{this.name}}</div>',
+        data:function(){
+           return  {red:false};
+        },
+        methods:{
+           add(){
+             this.red=true;
+            }
+        }
+    });
+    new Vue({
+        el: ".root",
+    })
+
+</script>
+</body>
+</html>

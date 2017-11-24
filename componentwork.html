@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="vue/dist/vue.js"></script>
+</head>
+<style>
+    *{
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        text-decoration: none;
+    }
+    .nav{
+     width:200px;
+        height:auto;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+    ul{
+        padding:0 20px;
+        box-sizing: border-box;
+    }
+   .firstul{
+        width:100%;
+        height:auto;
+    }
+    .firstul>.firstli{
+        width:100%;
+        height:30px;
+        border-bottom: 1px solid #ccc;
+        margin-top: 0;
+        text-align: left;
+        line-height: 30px;
+        font-size: 14px;
+    }
+    .secondul{
+        font-size: 14px;
+        line-height: 30px;
+        
+    }
+</style>
+<body>
+<div class="nav">
+    <component-menus title="安装" :con="list1"></component-menus>
+    <component-menus title="介绍" :con="list2"></component-menus>
+</div>
+<script>
+    Vue.component("component-menus",{
+        props:["title","con"],
+        template:'<ul class="firstul"><li class="firstli" @click="shouqi()">{{title}}</li><ul class="secondul" v-show="this.show"> <li class="secondli" v-for="list in con" >{{list}}</li></ul></ul>',
+        data:function(){
+            return  {show:true};
+        },
+        methods:{
+            shouqi(){
+                if(this.show==true){
+                    this.show=false;
+                }
+                else {
+                    this.show=true;
+                }
+
+            }
+        },
+    })
+    new Vue({
+        el:".nav" ,
+        data:{
+           list1:["基础","命令行工具","开发版构建","AMD 模块加载器","Bower"],
+            list2:["Vue是什么","起步","声明式渲染","条件与循环"]
+        }
+    })
+</script>
+
+</body>
+</html>

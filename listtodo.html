@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="node_modules/vue/dist/vue.js"> </script>
+    <style>
+        .input{
+            width:500px;
+            height:auto;
+            margin: 0 auto;
+        }
+        .write{
+            width: 100%;
+            height:30px;
+        }
+        .list{
+            width:100%;;
+            height:30px;
+            border-bottom: 1px solid #000;
+        }
+        .have{
+            margin-top: 10px;
+            width: 100%;
+            height: 30px;
+        }
+        .have input{
+            float: right;
+        }
+        .opt{
+            width:8px;
+            height:8px;
+            border:1px solid #ccc;
+            border-radius:50%;
+            float: left;
+            margin-top: 11px;
+            margin-right: 10px;
+        }
+        .red{
+            background: red;
+        }
+        .con{
+            font-size: 16px;
+            line-height: 30px;
+        }
+        .del{
+            float: right;
+        }
+    </style>
+</head>
+<body>
+<div class="view">
+<div class="input">
+    <input  class="write" v-model="text"  placeholder="请输入待办事项" @keydown.13="add()" v-focus="true">
+    <div class="have">
+        <input type="button" class="all" value="全部" @click="filters('all')">
+        <input type="button" class="yet" value="未完成" @click="filters(0)">
+        <input type="button" class="has" value="已完成" @click="filters(1)">
+    </div>
+    <div class="list" v-show="all.length>0" v-for="list in datas">
+        <span   class="opt"  :class="{red:list.state==1}" @click="changeState(list)"></span>
+        <span class="con"  v-if="list.edits"  @dblclick="edit(list)">{{list.con}}</span>
+        <input type="text"  v-else  @blur="edit(list)" v-model="list.con">
+         <button class="del" @click="del(list.id)">删除</button>
+    </div>
+    <div class="list" v-show="all.length==0">没有数据</div>
+</div>
+</div>
+<script>
+    Vue.directive('focus', {
+        inserted: function (el) {
+            el.focus()
+        }
+    })
+
+    new Vue({
+        el:".view",
+        data:{
+            all:localStorage.todo?JSON.parse(localStorage.todo):[],
+            text:"",
+            status:"all",
+            edits:true
+        } ,
+        methods:{
+            add(){
+                    var obj={};
+                    obj.id=1000*Math.random()+new Date().getDate();
+                    obj.con=this.text;
+                    obj.edits=true;
+                    obj.state=0;
+                    this.all.push(obj);
+                    localStorage.todo= JSON.stringify(this.all);
+                    this.text="";
+
+               } ,
+            del(data){
+               this.all=this.all.filter(function (a) {
+                        return a.id!=data;
+                });
+                localStorage.todo= JSON.stringify(this.all);
+            },
+            changeState(list){
+                   if(list.state==0){
+                       list.state=1;
+                   }
+                   else {
+                       list.state=0;
+                   }
+                localStorage.todo= JSON.stringify(this.all);
+            },
+            filters(str){
+                 this.status=str;
+            } ,
+            edit(list){
+                list.edits=!list.edits;
+            }
+        },
+        computed:{
+             datas:function(){
+                 var that=this;
+                 return  this.all.filter(function(obj){
+                     if(that.status=="all") {
+                         return obj;
+                     }
+                     else{
+                         if(obj.state==that.status){
+                             return obj;
+                         }
+                     }
+
+                 })
+             }
+
+        }
+    })
+
+</script>
+
+</body>
+</html>
